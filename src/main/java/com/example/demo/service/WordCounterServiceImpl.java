@@ -20,7 +20,7 @@ public class WordCounterServiceImpl implements WordCounterService
 	Logger logger = LoggerFactory.getLogger(WordCounterServiceImpl.class);
 
 	@Override
-	public List<WordCount> getWordCount(InputParagraph paragraph) // TODO
+	public List<WordCount> getWordCount(InputParagraph paragraph)
 	{
 		logger.debug("In getWordCount");
 		if (paragraph == null || StringUtils.isEmpty(paragraph.getPara().trim()))

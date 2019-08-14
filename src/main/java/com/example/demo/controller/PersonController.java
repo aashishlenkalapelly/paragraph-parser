@@ -96,8 +96,8 @@ public class PersonController
 	 * 
 	 * @param person {@link Person Person} object which should be added to the
 	 *               database.
-	 * @return An {@link ResponseEntity object} contains HTTP status code and either
-	 *         a {@link Person person} object or a {@link String string} containing
+	 * @return An {@link ResponseEntity object} with HTTP status code and either a
+	 *         {@link Person person} object or a {@link String string} containing
 	 *         the error message.
 	 */
 	@PostMapping("/person")

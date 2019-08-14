@@ -2,8 +2,6 @@ package com.example.demo.service;
 
 import java.util.List;
 
-import org.springframework.data.util.Pair;
-
 import com.example.demo.model.Person;
 
 /**
@@ -29,12 +27,10 @@ public interface PersonService
 	public List<Person> getAllPersons();
 
 	/**
-	 * Adds the provided {@link Person person} entity to the object if it doesn't
-	 * exist already. If the provided {@link Person person} entity exists in the
-	 * database then the existing entry is updated.
+	 * Adds the provided {@link Person person} entity to the database.
 	 * 
-	 * @param person entity which needs to be added or updated.
-	 * @return {@link Person person} object.
+	 * @param person entity which needs to be added.
+	 * @return {@link Person person} object which got added to the database.
 	 */
-	public Person addPerson(Person person); //TODO modify javadoc
+	public Person addPerson(Person person);
 }
