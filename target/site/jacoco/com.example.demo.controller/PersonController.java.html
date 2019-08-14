@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">paragraph-parser</a> &gt; <a href="index.source.html" class="el_package">com.example.demo.controller</a> &gt; <span class="el_source">PersonController.java</span></div><h1>PersonController.java</h1><pre class="source lang-java linenums">package com.example.demo.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.Person;
+import com.example.demo.service.PersonService;
+
+/**
+ * Controller for accepting HTTP requests related to {@link Person Person}
+ * entity.
+ */
+@RestController
+<span class="fc" id="L24">public class PersonController</span>
+{
+<span class="fc" id="L26">	Logger logger = LoggerFactory.getLogger(PersonController.class);</span>
+
+	@Autowired
+	PersonService personService;
+
+	/**
+	 * Accepts HTTP Get requests towards /persons for displaying all the
+	 * {@link Person person} records in the database.
+	 * 
+	 * @return An {@link ResponseEntity object} which either has a {@link List list}
+	 *         containing all the {@link Person person} objects in the database or a
+	 *         {@link String string} containing the error message and HTTP status
+	 *         code.
+	 */
+	@GetMapping(value = &quot;/persons&quot;)
+	public ResponseEntity&lt;?&gt; getPersons()
+	{
+<span class="fc" id="L43">		logger.debug(&quot;In getPersons&quot;);</span>
+		try
+		{
+<span class="fc" id="L46">			List&lt;Person&gt; persons = personService.getAllPersons();</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">			if (persons.size() &gt; 0)</span>
+			{
+<span class="fc" id="L49">				return new ResponseEntity&lt;List&lt;Person&gt;&gt;(persons, HttpStatus.OK);</span>
+			}
+<span class="fc" id="L51">			return new ResponseEntity&lt;String&gt;(&quot;There are no person entries in the database at the moment..&quot;,</span>
+					HttpStatus.OK);
+<span class="fc" id="L53">		} catch (Exception exception)</span>
+		{
+<span class="fc" id="L55">			logger.error(&quot;Error while getting person list from database.&quot;, exception);</span>
+<span class="fc" id="L56">			throw new RuntimeException(exception);</span>
+		}
+
+	}
+
+	/**
+	 * Accepts HTTP Get requests towards /person/personId to get the details of the
+	 * provided personId.
+	 * 
+	 * @param personId whose details should be returned.
+	 * @return An {@link ResponseEntity object} which either has the {@link Person
+	 *         person} object for the provided personId or a {@link String string}
+	 *         containing the error message and HTTP status code.
+	 */
+	@GetMapping(&quot;/person/{personId}&quot;)
+	public ResponseEntity&lt;?&gt; getPerson(@PathVariable(&quot;personId&quot;) Long personId)
+	{
+<span class="fc" id="L73">		logger.debug(&quot;In getPerson&quot;);</span>
+		try
+		{
+<span class="fc" id="L76">			Person person = personService.getPersonById(personId);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">			if (person != null)</span>
+			{
+<span class="fc" id="L79">				return new ResponseEntity&lt;Person&gt;(person, HttpStatus.OK);</span>
+			}
+<span class="fc" id="L81">			logger.debug(&quot;Provided personId: &quot; + personId + &quot;doesn't exist in the database&quot;);</span>
+<span class="fc" id="L82">			return new ResponseEntity&lt;String&gt;(&quot;The provided Person ID doesn't exist in the database yet..&quot;,</span>
+					HttpStatus.BAD_REQUEST);
+<span class="fc" id="L84">		} catch (IllegalArgumentException illegalArgumentException)</span>
+		{
+<span class="fc" id="L86">			return new ResponseEntity&lt;String&gt;(&quot;Person ID should not be null.&quot;, HttpStatus.BAD_REQUEST);</span>
+<span class="fc" id="L87">		} catch (Exception exception)</span>
+		{
+<span class="fc" id="L89">			logger.error(&quot;Error while fetching the person from database for personId: &quot; + personId, exception);</span>
+<span class="fc" id="L90">			throw new RuntimeException(exception);</span>
+		}
+	}
+
+	/**
+	 * Accepts HTTP Post requests towards /person to add a person to the database.
+	 * 
+	 * @param person {@link Person Person} object which should be added to the
+	 *               database.
+	 * @return An {@link ResponseEntity object} contains HTTP status code and either
+	 *         a {@link Person person} object or a {@link String string} containing
+	 *         the error message.
+	 */
+	@PostMapping(&quot;/person&quot;)
+	public ResponseEntity&lt;?&gt; addPerson(@RequestBody Person person)
+	{
+<span class="fc" id="L106">		logger.debug(&quot;In addOrUpdatePerson&quot;);</span>
+		try
+		{
+<span class="fc" id="L109">			return new ResponseEntity&lt;Person&gt;(personService.addPerson(person), HttpStatus.OK);</span>
+<span class="fc" id="L110">		} catch (IllegalArgumentException illegalArgumentException)</span>
+		{
+<span class="fc" id="L112">			return new ResponseEntity&lt;String&gt;(&quot;Please provide a valid input.&quot;, HttpStatus.BAD_REQUEST);</span>
+<span class="fc" id="L113">		} catch (Exception exception)</span>
+		{
+<span class="fc" id="L115">			logger.error(&quot;Error while saving the person to the database.\n&quot;, exception);</span>
+<span class="fc" id="L116">			throw new RuntimeException(exception);</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

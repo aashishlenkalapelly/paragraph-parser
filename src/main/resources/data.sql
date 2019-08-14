@@ -1,0 +1,5 @@
+insert into PERSON values(1, 'Tod', 'Schultes')
+insert into PERSON values(2, 'Steve', 'Ryal')
+insert into PERSON values(3, 'Rob', 'Gerelman')
+insert into PERSON values(4, 'Garret', 'Detrick')
+insert into PERSON values(5, 'Ed', 'Glover')

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WordCountController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">paragraph-parser</a> &gt; <a href="index.source.html" class="el_package">com.example.demo.controller</a> &gt; <span class="el_source">WordCountController.java</span></div><h1>WordCountController.java</h1><pre class="source lang-java linenums">package com.example.demo.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.InputParagraph;
+import com.example.demo.model.WordCount;
+import com.example.demo.service.WordCounterService;
+
+/**
+ * Controller for accepting HTTP requests related to word counting.
+ */
+@RestController
+<span class="fc" id="L23">public class WordCountController</span>
+{
+<span class="fc" id="L25">	Logger logger = LoggerFactory.getLogger(WordCountController.class);</span>
+
+	@Autowired
+	WordCounterService wordCounterService;
+
+	/**
+	 * Accepts HTTP Get requests towards /wordCount for displaying all the words and
+	 * theirs counts from the provided paragraph.
+	 * 
+	 * @param paragraph para for which unique words and their counts should be
+	 *                  calculated.
+	 * @return An {@link ResponseEntity object} which either has a {@link List list}
+	 *         containing the {@link WordCount WordCount} objects, each representing
+	 *         a unique word from the paragraph and it's count or a {@link String
+	 *         string} containing the error message and HTTP status code.
+	 */
+	@GetMapping(&quot;/wordCount&quot;)
+	@ResponseBody
+	public ResponseEntity&lt;?&gt; getWordCount(@RequestBody InputParagraph paragraph)
+	{
+<span class="fc" id="L45">		logger.debug(&quot;In getWordCount&quot;);</span>
+
+		try
+		{
+<span class="fc" id="L49">			List&lt;WordCount&gt; wordCountList = wordCounterService.getWordCount(paragraph);</span>
+<span class="fc" id="L50">			return new ResponseEntity&lt;List&lt;WordCount&gt;&gt;(wordCountList, HttpStatus.OK);</span>
+<span class="fc" id="L51">		} catch (IllegalArgumentException illegalArgumentException)</span>
+		{
+<span class="fc" id="L53">			logger.error(&quot;Input para is either null or empty.&quot;);</span>
+<span class="fc" id="L54">			return new ResponseEntity&lt;String&gt;(&quot;Input para is not valid.&quot;, HttpStatus.BAD_REQUEST);</span>
+<span class="fc" id="L55">		} catch (Exception exception)</span>
+		{
+<span class="fc" id="L57">			logger.error(&quot;Error while calculating the word count for given paragraph.&quot;, exception);</span>
+<span class="fc" id="L58">			throw new RuntimeException(exception);</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
